@@ -10,8 +10,6 @@
 - [Dataset & Preprocessing](#dataset--preprocessing)  
 - [Methodology](#methodology)  
   - [Experimental Design](#experimental-design)  
-- [Implementation](#implementation)  
-
 ---
 
 ## Abstract
@@ -50,18 +48,13 @@ Environmental sensing and smart‑grid applications rely on dense IoT networks s
   1. GCN on raw features per time step  
   2. GRU for sequence modeling  
 
-Graphs encode sensor similarity via Pearson correlation; see [Graph Construction](#graph-construction).
-
 ---
 
 ## Dataset & Preprocessing
 - **Source**: IoBT wireless weather network (25 towers, New Mexico)  
 - **Feature**: Temperature (°C) sampled every 5 min over 9 days  
 - **Splits**: 5 days train / 2 days validation / 2 days test  
-- **Task**: Forecast horizon \(H=4\) h from context window \(W=8\) h  
-  $$
-    W = 8\text{ h},\quad H = 4\text{ h}
-  $$
+- **Task**: Forecast horizon (4 hours) and context window (8 hours) 
 - **Downsampling**: \{5, 15, 30, 45, 60\} min  
 
 ### Preprocessing Steps
@@ -75,9 +68,6 @@ Graphs encode sensor similarity via Pearson correlation; see [Graph Construction
 
 ### Experimental Design
 - **Variables**  
-  - Sampling rate: 5–60 min  
+  - Sampling rate: 5,15,30,45,60 minutes 
   - Node count: 8, 16, 25  
 - **Metrics**: MAE, RMSE, MAPE  
-
-Here’s the corrected Markdown with properly formatted equations:
-## Implementation
