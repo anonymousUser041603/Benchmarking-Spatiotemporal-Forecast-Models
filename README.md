@@ -8,7 +8,7 @@ Implementation for comparing Baseline Temporal, Graph Neural Networks and Time-S
 
 Systematic comparison of forecasting models under varying sampling rates (5-60 min) and spatial coverage (8-25 nodes):
 
-- **Classical (Baseline) **: VAR, GRU, Transformer
+- **Classical(Baseline)**: VAR, GRU, Transformer
 - **TSFMs**: Moirai, Chronos, TimesFM  
 - **STGNNs**: GRUGCN, TGCN
   
@@ -30,25 +30,13 @@ Systematic comparison of forecasting models under varying sampling rates (5-60 m
 ## Repository Structure
 
 ```
-├── data/                    # IoBT dataset and preprocessing
+├── data/                    # IoBT dataset and adj_maps
+    ├── post_processed
+    ├── visualization
 ├── models/
-│   ├── baselines.py        # VAR, GRU, Transformer
-│   ├── tsfm/               # Moirai, TimesFM, Chronos
-│   └── stgnn/              # GRUGCN, TGCN
-├── utils/
-│   ├── graph_construction.py
-│   └── ensemble_similarity.py
-├── configs/                # Hyperparameters
-├── scripts/                # Training scripts
-└── results/                # Logs and outputs
-```
-
-## Reproduce Paper Results
-
-```bash
-python reproduce_table2.py  # Baseline models
-python reproduce_table3.py  # TSFMs
-python reproduce_table4.py  # STGNNs
+    ├── baseline/            # VAR, GRU, Transformer
+    ├── tsfm/               # Moirai, TimesFM, Chronos
+    └── stgnn/              # GRUGCN, TGCN
 ```
 
 ## Citation
@@ -63,7 +51,3 @@ python reproduce_table4.py  # STGNNs
   year={2024}
 }
 ```
-
-## License
-
-MIT License - see [LICENSE](LICENSE) for details.
