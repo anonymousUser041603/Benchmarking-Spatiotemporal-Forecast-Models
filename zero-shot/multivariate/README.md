@@ -10,4 +10,4 @@ Short, self-contained notebook to evaluate **Moirai** (time-series foundation mo
 - Loads CSVs from `Dataset_perSampling_pernodeConfig/temperature_data_{SAMP}min_{NODES}.csv`.
 - Builds fixed windows (context) and horizons.
 - Runs **Moirai** zero-shot forecasts.
-- Computes **MAE / RMSE / MAPE** and exports tidy CSVs + figures.
+- Computes **MAE / RMSE / MAPE** and exports tidy CSV.
