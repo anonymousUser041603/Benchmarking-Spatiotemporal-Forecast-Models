@@ -1,73 +1,113 @@
-# No One-Size-Fits-All: Uncovering Spatio‑Temporal Forecasting Trade‑offs with Graph Neural Networks and Foundation Models
+# Benchmarking Spatiotemporal Forecast Models
 
-## 📑 Table of Contents
-- [Abstract](#abstract)  
-- [Background & Motivation](#background--motivation)  
-- [Model Overview](#model-overview)  
-  - [Classical Baselines](#classical-baselines)  
-  - [Time Series Foundation Models (TSFMs)](#time-series-foundation-models-tsfms)  
-  - [Spatio‑Temporal GNNs (STGNNs)](#spatio-temporal-gnns-stgnns)  
-- [Dataset & Preprocessing](#dataset--preprocessing)  
-- [Methodology](#methodology)  
-  - [Experimental Design](#experimental-design)  
----
+PyTorch implementation comparing Graph Neural Networks and Foundation Models for spatio-temporal temperature forecasting.
 
-## Abstract
-Modern IoT deployments produce high‑volume spatiotemporal data for forecasting tasks. We benchmark classical (VAR, GRU, Transformer), Spatio‑Temporal GNNs (GRUGCN, T‑GCN), and Time Series Foundation Models (Moirai, TimesFM) on temperature forecasting in a 25‑node wireless sensor network. By varying sampling rates (5–60 min) and node counts (8, 16, 25), we uncover trade‑offs: STGNNs excel under sparse coverage and moderate frequency, TSFMs shine at high frequency but degrade with reduced spatial context. Our study guides model and deployment choices in large‑scale sensing systems.
+> **Paper**: "No One-Model-Fits-All: Uncovering Spatio-Temporal Forecasting Trade-offs with Graph Neural Networks and Foundation Models"
 
----
+## Overview
 
-## Background & Motivation
-Environmental sensing and smart‑grid applications rely on dense IoT networks streaming high‑frequency data. While edge sampling strategies aim to reduce data volume, their impact on centralized forecasting models is under‑studied. Different architectures (classical, RNNs, Transformers, STGNNs, TSFMs) exhibit unique sensitivities to temporal resolution and spatial coverage. We ask:  
-> **Do graph‑based STGNNs inherently outperform non‑graph alternatives across sampling frequencies and node densities?**
+Systematic comparison of forecasting models under varying sampling rates (5-60 min) and spatial coverage (8-25 nodes):
 
----
+- **Classical**: VAR, GRU, Transformer
+- **TSFMs**: Moirai, Chronos, TimesFM  
+- **STGNNs**: GRUGCN, TGCN
 
-## Model Overview
+**Key Finding**: Multivariate TSFM (Moirai) achieves best overall performance. STGNNs excel when spatial correlations are strong and data is sparse (optimal at 20-60% graph redundancy).
 
-### Classical Baselines
-- **VAR**: Multivariate autoregression leveraging all series jointly, no training required.  
-- **GRU**: Gated Recurrent Units for sequential temporal modeling.  
-- **Transformer**: Self‑attention model for long‑range temporal dependencies.
+## Installation
 
-### Time Series Foundation Models (TSFMs)
-| Attribute                  | TimesFM (200 M)      | Moirai‑Small (14 M)     |
-|----------------------------|----------------------|-------------------------|
-| Zero‑shot                  | ✓                    | ✓                       |
-| Multivariate               | ✗ (uni + covariates) | ✓                       |
-| Probabilistic Forecasting  | ✗ (point‑wise)       | ✓                       |
-| Pretraining Corpus         | 100 B time‑points    | 27 B observations       |
-| Architecture               | Decoder‑only         | Encoder‑only            |
-| Tokenization               | Fixed patches        | Multi‑resolution patches|
+```bash
+git clone https://github.com/anonymousUser041603/Benchmarking-Spatiotemporal-Forecast-Models.git
+cd Benchmarking-Spatiotemporal-Forecast-Models
+pip install -r requirements.txt
+```
 
-### Spatio‑Temporal GNNs (STGNNs)
-- **GRUGCN**  
-  1. GRU per‑node for temporal patterns  
-  2. GCN aggregation of neighbor states  
-- **T‑GCN**  
-  1. GCN on raw features per time step  
-  2. GRU for sequence modeling  
+**Requirements**: Python 3.8+, PyTorch 2.0+, torch-geometric, pytorch-lightning, torch-spatiotemporal
 
----
+## Dataset
 
-## Dataset & Preprocessing
-- **Source**: IoBT wireless weather network (25 towers, New Mexico)  
-- **Feature**: Temperature (°C) sampled every 5 min over 9 days  
-- **Splits**: 5 days train / 2 days validation / 2 days test  
-- **Task**: Forecast horizon (4 hours) and context window (8 hours) 
-- **Downsampling**: \{5, 15, 30, 45, 60\} min  
+**IoBT Meteorological Data**: 25 sensor towers, 10km × 10km area, 9 days at 5-min sampling
+- Train: 5 days | Val: 2 days | Test: 2 days
+- Features: Temperature, humidity, rainfall, pressure
 
-### Preprocessing Steps
-1. **Z‑score normalization**  
-2. **Window aggregation** to fixed \(W\) per node  
-3. **Graph thresholding** by top‑\(p\)% Pearson correlations  
+## Quick Start
 
----
+```bash
+# Train baseline models
+python train_baseline.py --model gru --sampling_rate 15 --nodes 16
 
-## Methodology
+# Evaluate TSFMs (zero-shot)
+python eval_tsfm.py --model moirai --sampling_rate 30 --nodes 25
 
-### Experimental Design
-- **Variables**  
-  - Sampling rate: 5,15,30,45,60 minutes 
-  - Node count: 8, 16, 25  
-- **Metrics**: MAE, RMSE, MAPE  
+# Train STGNNs with graph redundancy
+python train_stgnn.py --model grugcn --redundancy 60 --sampling_rate 15 --nodes 16
+
+# Run full benchmark
+bash scripts/run_all_experiments.sh
+```
+
+## Experiment Setup
+
+- **Context Window**: 8 hours (480 min)
+- **Prediction Horizon**: 4 hours (240 min)
+- **Sampling Rates**: 5, 15, 30, 45, 60 minutes
+- **Node Counts**: 8, 16, 25 sensors
+- **Graph Redundancy** (STGNNs): 0%, 20%, 60%, 100%
+
+## Key Results
+
+| Model | Best Scenario | MAE (°C) |
+|-------|---------------|----------|
+| **Moirai** | 45min/8 nodes | **0.861** |
+| **TGCN** | 15min/16 nodes (20% red.) | 1.829 |
+| **GRUGCN** | 30min/8 nodes (60% red.) | 2.088 |
+| **Chronos** | 15min/25 nodes | 3.400 |
+| **TimesFM** | 5min/8 nodes (w/ covariates) | 3.753 |
+
+### Model Trade-offs
+
+- **Moirai**: Best overall, native multivariate learning via attention
+- **STGNNs**: Outperform when spatial correlations strong and redundancy tuned
+- **Chronos**: Most robust zero-shot univariate forecasting
+- **TimesFM**: Struggles at coarse sampling, improves with ensemble similarity
+
+## Repository Structure
+
+```
+├── data/                    # IoBT dataset and preprocessing
+├── models/
+│   ├── baselines.py        # VAR, GRU, Transformer
+│   ├── tsfm/               # Moirai, TimesFM, Chronos
+│   └── stgnn/              # GRUGCN, TGCN
+├── utils/
+│   ├── graph_construction.py
+│   └── ensemble_similarity.py
+├── configs/                # Hyperparameters
+├── scripts/                # Training scripts
+└── results/                # Logs and outputs
+```
+
+## Reproduce Paper Results
+
+```bash
+python reproduce_table2.py  # Baseline models
+python reproduce_table3.py  # TSFMs
+python reproduce_table4.py  # STGNNs
+```
+
+## Citation
+
+```bibtex
+@inproceedings{gupta2024noonemodel,
+  title={No One-Model-Fits-All: Uncovering Spatio-Temporal Forecasting Trade-offs 
+         with Graph Neural Networks and Foundation Models},
+  author={Gupta, Ragini and Raina, Naman and Chen, Bo and Chen, Li and 
+          Danilov, Claudiu and Eckhardt, Josh and Bernard, Keyshla and Nahrstedt, Klara},
+  booktitle={ACM Workshop},
+  year={2024}
+}
+```
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.
