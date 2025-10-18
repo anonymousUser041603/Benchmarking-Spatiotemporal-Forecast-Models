@@ -1,7 +1,7 @@
 # Chronos Zero-Shot Forecasting (Colab)
 
 > Runs the **Chronos / Chronos-Bolt** pipeline on IoBT temperature data across
-> sampling rates and node counts. Produces per-run metrics CSVs and (optionally) plot CSVs.
+> sampling rates and node counts. Produces per-run metrics CSVs.
 
 ---
 
@@ -13,3 +13,4 @@
    import os
    from google.colab import userdata
    login(token=userdata.get('HF_TOKEN'))
+
