@@ -16,7 +16,7 @@ Systematic comparison of forecasting models under varying sampling rates (5-60 m
 
 **IoBT Meteorological Data**: 25 sensor towers, 10km × 10km area, 9 days at 5-min sampling
 - Train: 5 days | Val: 2 days | Test: 2 days
-- Features: **Temperature**, Humidity, Rainfall, Pressure
+- Features: **Temperature**
 
 
 ## Experiment Setup
