@@ -1,6 +1,6 @@
 # MOIRAI_Analysis.ipynb — Zero-Shot Multivariate Forecasting
 
-Short, self-contained notebook to evaluate **Moirai** (time-series foundation model) on the IoBT temperature dataset under different **sampling rates** (5–60 min) and **node counts** (8/16/25). It prepares data, runs zero-shot forecasts, and saves metrics/plots.
+Short, self-contained notebook to evaluate **Moirai** (time-series foundation model) on the IoBT temperature dataset under different **sampling rates** (5–60 min) and **node counts** (8/16/25). It prepares data, runs zero-shot forecasts, and saves metrics.
 
 **Notebook:** [MOIRAI_Analysis.ipynb](MOIRAI_Analysis.ipynb)
 
