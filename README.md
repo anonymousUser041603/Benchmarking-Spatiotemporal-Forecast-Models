@@ -33,22 +33,8 @@ Systematic comparison of forecasting models under varying sampling rates (5-60 m
 ├── data/                    # IoBT dataset and adj_maps
     ├── post_processed
     ├── visualization
-    ├── raw
 ├── models/
     ├── baseline/            # VAR, GRU, Transformer
     ├── tsfm/               # Moirai, TimesFM, Chronos
     └── stgnn/              # GRUGCN, TGCN
-```
-
-## Citation
-
-```bibtex
-@inproceedings{gupta2024noonemodel,
-  title={No One-Model-Fits-All: Uncovering Spatio-Temporal Forecasting Trade-offs 
-         with Graph Neural Networks and Foundation Models},
-  author={Gupta, Ragini and Raina, Naman and Chen, Bo and Chen, Li and 
-          Danilov, Claudiu and Eckhardt, Josh and Bernard, Keyshla and Nahrstedt, Klara},
-  booktitle={ACM Workshop},
-  year={2024}
-}
 ```
